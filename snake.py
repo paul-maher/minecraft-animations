@@ -1,3 +1,9 @@
+########
+#
+## DONT USE THIS FILE. ITS FOR REFERENCE ONLY
+#
+#######
+
 from mcpi import minecraft 
 import mcpi.block as block 
 import time 
