@@ -1,5 +1,8 @@
 from collections import deque
-import time
+from mcpi import minecraft 
+import mcpi.block as block 
+from random import randint 
+import time 
 
 class Snake:
    
@@ -81,7 +84,7 @@ class Snake:
 mc = minecraft.Minecraft.create() 
 xPos,yPos,zPos = mc.player.getTilePos() 
 
-snake = Snake(xPos,20,zPos,5,99,98)
+snake = Snake(xPos,20,zPos,5,block.STONE,block.MARBLE)
 snake.runner()
 print(snake.bits)
 snake.runner()
