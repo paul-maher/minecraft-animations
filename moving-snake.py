@@ -86,4 +86,3 @@ xPos,yPos,zPos = mc.player.getTilePos()
 snake = Snake(xPos,30,zPos,50,block.LAPIS_LAZULI_ORE,block.LAPIS_LAZULI_BLOCK)
 snake.runner()
 
-LAPIS_LAZULI_ORE
