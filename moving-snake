@@ -77,8 +77,11 @@ class Snake:
                 print "had to go up"
         return(x,y,z)
         
-snake = Snake(3,20,3,5,99,98)
+# Connect to the game
+mc = minecraft.Minecraft.create() 
+xPos,yPos,zPos = mc.player.getTilePos() 
 
+snake = Snake(xPos,20,zPos,5,99,98)
 snake.runner()
 print(snake.bits)
 snake.runner()
