@@ -11,6 +11,8 @@ WEST = 4
 
 BIAS = 20
 
+passable = [block.AIR.id,block.WATER_STATIONARY.id]
+
 # A class to implment a moving snake in Minecraft
 class Snake:
    
@@ -35,7 +37,7 @@ class Snake:
             time.sleep(0.5)
 
             # work out the new head position
-            newPos = _self.workOutNewHeadPosition(_self.bits[0])
+            newPos = _self.workOutNewHeadPositionEx(_self.bits[0])
 
             # Make the head back to a body part
             mc.setBlock(_self.bits[0],_self.body)        
@@ -89,12 +91,57 @@ class Snake:
 
         # And return the new position  
         return(x,y,z)
+
+    def workOutNewHeadPositionEx(_self, pos):
+
+        x,y,z = pos
+
+        # Try to move down first of all
+        if mc.getBlock(x, y-1, z) in passable:
+            y = y-1
+        else:
+
+            # Check out the left, right, forward, backward options
+            dirList = []
+            if mc.getBlock(x+1, y, z) in passable:
+                dirList.append(NORTH)
+            if mc.getBlock(x-1, y, z) in passable:
+                dirList.append(SOUTH)
+            if mc.getBlock(x, y, z+1) in passable:
+                dirList.append(EAST)
+            if mc.getBlock(x, y, z-1) in passable:
+                dirList.append(WEST)
+
+            # Add a bias here to try and keep going in the same direction as last time if possible. Add
+            # the same option in as many times as appropriate to suit the bias level
+            if _self.selection in dirList:
+                for _ in range(BIAS):
+                    dirList.append(_self.selection)
+
+            # Now pick an option from the list at random
+            if len(dirList) > 0:
+                _self.selection = dirList[randint(0,len(dirList)-1)]
+                if _self.selection == NORTH:
+                    x = x + 1
+                if _self.selection == SOUTH:
+                    x = x - 1
+                if _self.selection == EAST:
+                    z = z + 1
+                if _self.selection == WEST:
+                    z = z - 1
+            else:
+                # If there are no options, last resort is to go up. This will overwrite blocks
+                y = y+1
+
+        # And return the new position  
+        return(x,y,z)
         
 # Connect to the game
 mc = minecraft.Minecraft.create() 
 xPos,yPos,zPos = mc.player.getTilePos() 
 
 # Make a snake and animate it
-snake = Snake(xPos,30,zPos,10,block.LAPIS_LAZULI_ORE,block.LAPIS_LAZULI_BLOCK)
+snake = Snake(xPos,30,zPos,10,block.GOLD_BLOCK,block.REDSTONE_ORE)
+#snake = Snake(xPos,30,zPos,10,block.LAPIS_LAZULI_ORE,block.LAPIS_LAZULI_BLOCK)
 snake.runner()
 
