@@ -14,9 +14,6 @@ WEST = 4
 # Tendancy to keep moving in the same direction. 
 BIAS = 20
 
-# Number of moves between being diving not diving
-WATER_DIVING = 100
-
 # Borrowing
 BURROWING = 20
 
@@ -128,6 +125,5 @@ xPos,yPos,zPos = mc.player.getTilePos()
 
 # Make a snake and animate it
 snake = Snake(xPos,30,zPos,10,block.GOLD_BLOCK,block.REDSTONE_ORE)
-#snake = Snake(xPos,30,zPos,10,block.LAPIS_LAZULI_ORE,block.LAPIS_LAZULI_BLOCK)
 snake.runner()
 
