@@ -2,6 +2,7 @@ from collections import deque
 from mcpi import minecraft 
 import mcpi.block as block 
 from random import randint 
+from collections import namedtuple
 import time 
 
 # Define directions
@@ -13,8 +14,20 @@ WEST = 4
 # Tendancy to keep moving in the same direction. 
 BIAS = 20
 
+# Number of moves between being diving not diving
+WATER_DIVING = 100
+
+# Borrowing
+BURROWING = 20
+
+# Define behaviours using named tuple
+Behaviour = namedtuple('Behaviour','interval,blockID')
+behaviours = [Behaviour(100.0,block.WATER_STATIONARY.id),
+              Behaviour(5.0,block.DIRT.id),
+              Behaviour(45.0,block.GRASS.id)]
+
 # Blocks that are considered 'passable' If you don't want to go under water remove from this list
-passable = [block.AIR.id,block.WATER_STATIONARY.id]
+passable = [block.AIR.id, block.WATER_STATIONARY.id, block.GRASS.id, block.DIRT.id]
 
 # A class to implment a moving snake in Minecraft
 class Snake:
@@ -29,6 +42,8 @@ class Snake:
 
     # Animate the snakes body        
     def runner(_self):
+
+        moveCount = 1.0
 
 	# Keep going forever
         while(True):
@@ -49,7 +64,19 @@ class Snake:
         
             # Erase the tail
             mc.setBlock(_self.bits.pop(),0)
-        
+
+            moveCount = moveCount + 1
+
+            # Behaviour modifiers
+            # Every so often add or remov the water, diret etc blocks form the list. This will
+            # make the beast siwm under the water or return to the surface or dig tunnels
+            for behaviour in behaviours:
+                if moveCount/behaviour.interval == int(moveCount/behaviour.interval):
+                    if behaviour.blockID in passable:
+                        passable.remove(behaviour.blockID)
+                    else:
+                        passable.append(behaviour.blockID)
+
     # Work out the direction of movment for the next head position
     def workOutNewHeadPosition(_self, pos):
 
